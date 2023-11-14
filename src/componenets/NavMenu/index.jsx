@@ -7,7 +7,7 @@ import { Context } from "../Context";
 import {FilePicker} from 'react-file-picker'
 
 const NavMenu = () => {
-    const liStyle = 'p-2 duration-500 hover:bg-gray-300 cursor-pointer rounded-lg text-black font-semibold w-full h-full';
+    const liStyle = 'p-3 duration-500 hover:bg-gray-300 cursor-pointer rounded-lg text-black font-semibold w-full h-full';
 
     const { menuHidden, setMenuHidden,handleFileChange } = useContext(Context)
     return (
@@ -27,7 +27,7 @@ const NavMenu = () => {
                     </NavLink>
                 </li>
                 <li className={liStyle}>
-                    <NavLink to='recents'>
+                    <NavLink to='/all'>
                         Recientes
                     </NavLink>
                 </li>
@@ -52,7 +52,6 @@ const NavMenu = () => {
                     </NavLink>
                 </li>
 
-                <li className={liStyle}>0.0 GB de 0.0 GB utilizados</li>
             </ul>
 
             <button className="absolute right-0 top-2/4 font-bold text-xl" onClick={() => setMenuHidden(!menuHidden)}> <AiOutlineCaretLeft /> </button>

@@ -8,10 +8,12 @@ const CLIENT_ID = '35910052181-t1950mf5aeqef4aennlsh4v2gj4ap11q.apps.googleuserc
 const Provider = ({ children }) => {
     const [googleCredential, setGoogleCredential] = useState('')
     const [elements, setElements] = useState([])
+    const [userInfo, setUserInfo] = useState({})
     const [recentElements, setRecentElements] = useState([])
     const [searchText, setSearchText] = useState('')
     const [menuHidden, setMenuHidden] = useState(true)
-    const [openModal, setOpenModal] = useState(false)
+    const [openEditor, setOpenEditor] = useState(false)
+    const [openUser, setOpenUser] = useState(false)
 
     const [item, setItem] = useState({})
 
@@ -24,7 +26,23 @@ const Provider = ({ children }) => {
         }
         gapi.load('client:auth2', start)
         listFiles()
+        getUserInfo()
     }, [googleCredential])
+
+    const getUserInfo = () => {
+        try {
+            fetch('https://www.googleapis.com/drive/v3/about?fields=kind,storageQuota,user(displayName,photoLink,emailAddress)', {
+                method: 'get',
+                mode: 'cors',
+                credentials: 'same-origin',
+                headers: new Headers({ 'Authorization': 'Bearer ' + googleCredential.access_token })
+            })
+            .then(data => data.json())
+            .then(data => setUserInfo(data))
+        } catch (error) {
+            console.log("user error: "+error)
+        }
+    }
 
     const listElements = (count) => {
         return fetch(`https://www.googleapis.com/drive/v3/files?fields=nextPageToken,files(id,name,iconLink,size,modifiedTime,thumbnailLink,owners,starred)&pageSize=${count}`, {
@@ -80,8 +98,9 @@ const Provider = ({ children }) => {
         })))
         listElements(6).then(data => setRecentElements(data.files))
     }
-    const deleteFile =(fileId) => {
-        fetch('https://www.googleapis.com/drive/v2/files/'+fileId, {
+
+    const deleteFile = (fileId) => {
+        fetch('https://www.googleapis.com/drive/v2/files/' + fileId, {
             method: 'DELETE',
             mode: 'cors',
             credentials: 'same-origin',
@@ -92,7 +111,7 @@ const Provider = ({ children }) => {
         var file = {
             name
         }
-        fetch('https://www.googleapis.com/drive/v3/files/'+fileId,{
+        fetch('https://www.googleapis.com/drive/v3/files/' + fileId, {
             method: 'PATCH',
             mode: 'cors',
             credentials: 'same-origin',
@@ -104,7 +123,7 @@ const Provider = ({ children }) => {
         var file = {
             starred
         }
-        fetch('https://www.googleapis.com/drive/v3/files/'+fileId,{
+        fetch('https://www.googleapis.com/drive/v3/files/' + fileId, {
             method: 'PATCH',
             mode: 'cors',
             credentials: 'same-origin',
@@ -113,22 +132,22 @@ const Provider = ({ children }) => {
         }).then(data => listFiles())
     }
     const download = (fileId, name) => {
-        try{
-            fetch('https://www.googleapis.com/drive/v3/files/'+fileId+"?alt=media",{
+        try {
+            fetch('https://www.googleapis.com/drive/v3/files/' + fileId + "?alt=media", {
                 method: 'GET',
                 mode: 'cors',
                 credentials: 'same-origin',
                 headers: new Headers({ 'Authorization': 'Bearer ' + googleCredential.access_token }),
             })
-            .then(res => res.blob())
-            .then(blob => {
-                var a = document.createElement('a');
-                console.log(blob)
-                a.download = name;
-                a.href = window.URL.createObjectURL(blob);
-                a.click();
-            })
-        }catch(error){
+                .then(res => res.blob())
+                .then(blob => {
+                    var a = document.createElement('a');
+                    console.log(blob)
+                    a.download = name;
+                    a.href = window.URL.createObjectURL(blob);
+                    a.click();
+                })
+        } catch (error) {
             console.log(error)
         }
     }
@@ -154,14 +173,18 @@ const Provider = ({ children }) => {
                     setMenuHidden,
                     googleCredential,
                     setGoogleCredential,
+                    userInfo,
+                    setUserInfo,
                     searchText,
                     setSearchText,
                     searchItems,
                     handleFileChange,
                     listFiles,
                     deleteFile,
-                    openModal,
-                    setOpenModal,
+                    openEditor,
+                    setOpenEditor,
+                    openUser,
+                    setOpenUser,
                     item,
                     setItem,
                     rename,

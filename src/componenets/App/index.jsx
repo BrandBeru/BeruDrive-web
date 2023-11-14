@@ -3,7 +3,7 @@ import './App.css';
 import { MyUnity } from '../../Pages/MyUnity'
 import { Bin } from '../../Pages/Bin'
 import { Favorites } from '../../Pages/Favorites'
-import { Recents } from '../../Pages/Recents'
+import { All } from '../../Pages/All'
 import { Storage } from '../../Pages/Storage'
 import { NotFound } from '../../Pages/NotFound'
 
@@ -15,6 +15,7 @@ import { NavBar } from '../NavBar';
 
 import { Modal } from "../../componenets/Modal"
 import { Editor } from "../../componenets/Editor"
+import { UserInfo } from '../UserInfo';
 
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
       },
       {
         path: '/all',
-        element: <Recents />
+        element: <All />
       },
       {
         path: '/storage',
@@ -60,6 +61,7 @@ function App() {
 
         <Modal>
           <Editor />
+          <UserInfo />
         </Modal>
       </Provider>
     </BrowserRouter>

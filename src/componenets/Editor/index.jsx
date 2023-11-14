@@ -1,13 +1,11 @@
 import { useContext, useState } from "react"
 import { Context } from "../Context"
 
-import {GrFormClose} from 'react-icons/gr'
-
 const Editor = () => {
-    const {setOpenModal, item, rename} = useContext(Context)
+    const {setOpenEditor, openEditor, item, rename} = useContext(Context)
     const [name, setName] = useState(item.name)
     const onCancel = () => {
-        setOpenModal(false)
+        setOpenEditor(false)
     }
     const onChange = (event) => {
         setName(event.target.value)
@@ -15,10 +13,10 @@ const Editor = () => {
     const onSubmit = (event) => {
         event.preventDefault()
         rename(item.id, name)
-        setOpenModal(false)
+        setOpenEditor(false)
     }
     return (
-        <form className="w-full h-full max-h-96 max-w-lg bg-gray-200 flex flex-col justify-center items-center p-20 rounded-lg" onSubmit={onSubmit}>
+        openEditor && <form className="w-full h-full max-h-96 max-w-lg bg-gray-200 flex flex-col justify-center items-center p-20 rounded-lg" onSubmit={onSubmit}>
             <span className="text-center w-full font-bold text-lg uppercase text-gray-800">Nuevo nombre del archivo</span>
             <div className="mt-20 flex gap-3 w-full">
                 <input placeholder={item.name} className="outline-none bg-transparent hover:border-b-gray-800 text-gray-800 text-lg w-full p-3 border-0 border-transparent border-b-2 border-b-gray-600 duration-500 " onChange={onChange} value={name} />
